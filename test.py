@@ -8,6 +8,7 @@ with open("top.txt", "r") as f:
     tickers = [ticker.strip() for ticker in f.readlines()]
 
 urls = []
+missed = []
 
 for ticker in tickers:
     urls.append(f"https://www.screener.in/company/{ticker}/#quarters")
@@ -16,7 +17,8 @@ for i, url in enumerate(urls):
     # Send a GET request to the webpage
     response = requests.get(url)
     if response.status_code != 200:
-        print(f"Failed to retrieve {tickers[i]}")
+        print(f"Failed to retrieve {tickers[i]}. Error code: {response.status_code}")
+        missed.append(tickers[i])
         continue
 
     # Parse the webpage content
@@ -56,3 +58,8 @@ for i, url in enumerate(urls):
                 # Save the DataFrame to an Excel sheet with the section ID as the sheet name
                 sheet_name = section_id.replace(' ', '_').replace('/', '-')
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
+
+# clear top.txt and add missed tickers
+with open("top.txt", "w") as f:
+    for ticker in missed:
+        f.write(f"{ticker}\n")
