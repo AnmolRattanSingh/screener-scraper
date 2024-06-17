@@ -12,6 +12,9 @@ excels = []
 for file in files:
     excels.append(file.split(".")[0].split("/")[-1])
 
-for ticker in tickers:
-    if ticker not in excels:
-        print(ticker)
+for excel in excels:
+    print(excel)
+
+# for ticker in tickers:
+#     if ticker not in excels:
+#         print(ticker)
