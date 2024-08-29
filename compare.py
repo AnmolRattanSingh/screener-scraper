@@ -3,7 +3,7 @@ import os
 import glob
 
 
-with open("top.txt", "r") as f:
+with open("tickers.txt", "r") as f:
     tickers = [ticker.strip() for ticker in f.readlines()]
 
 output_dir = "output"

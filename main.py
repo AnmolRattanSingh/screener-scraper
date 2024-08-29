@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from io import StringIO
 import time
 
-with open("top.txt", "r") as f:
+with open("tickers.txt", "r") as f:
     tickers = [ticker.strip() for ticker in f.readlines()]
 
 urls = []
@@ -69,17 +69,17 @@ for i, url in enumerate(urls):
     excel_filename = f"{output_dir}/{tickers[i]}.xlsx"
     with pd.ExcelWriter(excel_filename, engine='xlsxwriter') as writer:
 
-        # Extract and save the "top-ratios" list
-        top_ratios = soup.find("ul", id="top-ratios")
-        if top_ratios:
+        # Extract and save the "tickers-ratios" list
+        tickers_ratios = soup.find("ul", id="tickers-ratios")
+        if tickers_ratios:
             items = []
-            for li in top_ratios.find_all("li"):
+            for li in tickers_ratios.find_all("li"):
                 title = li.find("span", class_="name").get_text(strip=True)
                 value = li.find("span", class_="value").get_text(strip=True)
                 items.append({"Title": title, "Value": value})
 
             df_ratios = pd.DataFrame(items)
-            df_ratios.to_excel(writer, sheet_name="Top Ratios", index=False)
+            df_ratios.to_excel(writer, sheet_name="tickers Ratios", index=False)
 
         # Find all sections with relevant data
         sections = soup.find_all("section", class_="card")
@@ -108,7 +108,7 @@ for i, url in enumerate(urls):
                 sheet_name = section_id.replace(' ', '_').replace('/', '-')
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
 
-# clear top.txt and add missed tickers
-with open("top.txt", "w") as f:
+# clear tickers.txt and add missed tickers
+with open("tickers.txt", "w") as f:
     for ticker in missed:
         f.write(f"{ticker}\n")
